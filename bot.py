@@ -17,11 +17,9 @@
 
 import base64
 import logging
-import traceback
 
 import discord
 from bot_bin.bot import Bot
-from discord.ext import commands
 
 logging.basicConfig(level=logging.WARNING)
 logging.getLogger('discord').setLevel(logging.INFO)
@@ -31,11 +29,6 @@ logger.setLevel(logging.INFO)
 class Bot(Bot):
 	startup_extensions = (
 		'cogs.emote',
-		'cogs.meta',
-		'cogs.stats',
-		'bot_bin.debug',
-		'bot_bin.misc',
-		'bot_bin.systemd',
 		'jishaku',
 	)
 
@@ -59,17 +52,6 @@ class Bot(Bot):
 			self.config.get('response_emojis', {}).get('success', default))
 
 def main():
-	import sys
-
-	if len(sys.argv) < 3:
-		print('Usage:', sys.argv[0], '<shard count> <hyphen-separated list of shard IDs>', file=sys.stderr)
-		sys.exit(1)
-
-	# we place these lines up here instead of inline in order to improve tracebacks,
-	# as python tracebacks do not drill down to specific lines of a multi-line expression
-	shard_count = int(sys.argv[1])
-	shard_ids = list(map(int, sys.argv[2].split('-')))
-
 	Bot(
 		intents=discord.Intents(
 			guilds=True,
@@ -84,10 +66,8 @@ def main():
 		member_cache_flags=discord.MemberCacheFlags.none(),
 		# disable message cache
 		max_messages=None,
-
-		shard_count=shard_count,
-		shard_ids=shard_ids,
 	).run()
+
 
 if __name__ == '__main__':
 	main()
